@@ -47,6 +47,7 @@ type Gcd struct {
 func NewChromeDebugger() *Gcd {
 	c := &Gcd{}
 	c.Targets = make([]*ChromeTarget, 0)
+	c.Port = "9222"
 	return c
 }
 
