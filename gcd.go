@@ -40,7 +40,7 @@ type Gcd struct {
 	sync.RWMutex  // for locking pages (i.e. websocket clients)
 	Targets       []*ChromeTarget
 	chromeProcess *os.Process
-	port          string
+	Port          string
 }
 
 // Give it a friendly name.
