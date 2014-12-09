@@ -55,7 +55,7 @@ func NewChromeDebugger() *Gcd {
 // userDir - the user directory to start from so we get a fresh profile
 // port - The port to listen on.
 func (c *Gcd) StartProcess(exePath, userDir, port string) {
-	c.port = port
+	c.Port = port
 	dir := fmt.Sprintf("--user-data-dir=%s", userDir)
 	debugPort := fmt.Sprintf("--remote-debugging-port=%s", port)
 	cmd := exec.Command(exePath, dir, debugPort)
@@ -78,7 +78,7 @@ func (c *Gcd) ExitProcess() error {
 // Gets the primary tabs/processes to work with. Each will have their own references
 // to the underlying API components (such as Page, Debugger, DOM etc).
 func (c *Gcd) GetTargets() []*ChromeTarget {
-	resp, err := http.Get(fmt.Sprintf("http://localhost:%s/json", c.port))
+	resp, err := http.Get(fmt.Sprintf("http://localhost:%s/json", c.Port))
 	if err != nil {
 		log.Fatalf("%v\n", err)
 	}
@@ -94,7 +94,7 @@ func (c *Gcd) GetTargets() []*ChromeTarget {
 		log.Fatalf("error decoding inspectable pages: %v\n", err)
 	}
 	for _, v := range targets {
-		target := newChromeTarget(c.port, v)
+		target := newChromeTarget(c.Port, v)
 		c.Targets = append(c.Targets, target)
 	}
 	return c.Targets
@@ -102,7 +102,7 @@ func (c *Gcd) GetTargets() []*ChromeTarget {
 
 // Create a new empty tab, returns the chrome target.
 func (c *Gcd) NewTab() *ChromeTarget {
-	resp, err := http.Get(fmt.Sprintf("http://localhost:%s/json/new", c.port))
+	resp, err := http.Get(fmt.Sprintf("http://localhost:%s/json/new", c.Port))
 	if err != nil {
 		log.Fatalf("%v\n", err)
 	}
@@ -117,12 +117,12 @@ func (c *Gcd) NewTab() *ChromeTarget {
 		fmt.Printf("body: %s\n", string(body))
 		log.Fatalf("error decoding inspectable page: %v\n", err)
 	}
-	return newChromeTarget(c.port, tabTarget)
+	return newChromeTarget(c.Port, tabTarget)
 }
 
 // Closes the tab
 func (c *Gcd) CloseTab(target *ChromeTarget) {
-	resp, err := http.Get(fmt.Sprintf("http://localhost:%s/json/close/%s", c.port, target.Target.Id))
+	resp, err := http.Get(fmt.Sprintf("http://localhost:%s/json/close/%s", c.Port, target.Target.Id))
 	if err != nil {
 		log.Fatalf("%v\n", err)
 	}
@@ -136,7 +136,7 @@ func (c *Gcd) CloseTab(target *ChromeTarget) {
 
 // Activates the tab.
 func (c *Gcd) ActivateTab(target *ChromeTarget) {
-	resp, err := http.Get(fmt.Sprintf("http://localhost:%s/json/activate/%s", c.port, target.Target.Id))
+	resp, err := http.Get(fmt.Sprintf("http://localhost:%s/json/activate/%s", c.Port, target.Target.Id))
 	if err != nil {
 		log.Fatalf("%v\n", err)
 	}
