@@ -59,7 +59,7 @@ func (c *Gcd) StartProcess(exePath, userDir, port string) {
 	c.Port = port
 	dir := fmt.Sprintf("--user-data-dir=%s", userDir)
 	debugPort := fmt.Sprintf("--remote-debugging-port=%s", port)
-	cmd := exec.Command(exePath, dir, debugPort)
+	cmd := exec.Command(exePath, dir, debugPort, "-kiosk")
 	go func() {
 		err := cmd.Start()
 		if err != nil {
